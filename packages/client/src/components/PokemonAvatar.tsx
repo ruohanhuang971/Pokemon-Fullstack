@@ -4,15 +4,18 @@
 import type { UniqueIdentifier } from '@dnd-kit/core';
 
 type PokemonAvatarProps = {
-    name: UniqueIdentifier;
+    // id: UniqueIdentifier;
+    name: string;
+    image: string;
 };
 
-const PokemonAvatar = ({ name }: PokemonAvatarProps) => {
+const PokemonAvatar = ({ name, image }: PokemonAvatarProps) => {
     return (
         <div>
             {/* placeholder square */}
-            <div className="w-80px h-15 text-small md:w-50 md:h-50 md:text-2xl flex justify-center items-center bg-gray-800 rounded-2xl text-amber-100 font-bold cursor-grab active:cursor-grabbing">
-                {name == 'null' ? 'drop here' : name}
+            <div className="w-20 h-24 text-xs px-2 py-5 md:w-40 md:h-48 md:text-2xl md:px-4 md:py-5 flex flex-col justify-center items-center rounded-2xl bg-cyan-950 text-amber-100 font-bold cursor-grab active:cursor-grabbing">
+                <img src={image} />
+                <p>{name == 'null' ? 'drop here' : name}</p>
             </div>
         </div>
     );

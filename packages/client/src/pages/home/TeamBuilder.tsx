@@ -5,6 +5,7 @@ import SearchOptions from './SearchOptions'; // draggable
 import TeamSlots from './TeamSlots'; // droppable
 import PokemonAvatar from '../../components//pokemonAvatar';
 import SearchBar from './SearchBar';
+import SearchResults from './SearchResults';
 
 /*
     TeamBuilder: drag pokemon cards from search options to teamSlot
@@ -25,7 +26,7 @@ const TeamBuilder = () => {
     });
 
     return (
-        <div>
+        <div className="flex flex-col justify-center item-center">
             <DndContext onDragEnd={handleDragEnd}>
                 {/* Row of droppable slots */}
                 <div className="flex justify-center space-x-6 mb-8">
@@ -44,6 +45,8 @@ const TeamBuilder = () => {
                 </div>
 
                 <SearchBar />
+
+                <SearchResults />
 
                 {/* Draggable Items
                 <div className="flex justify-center">

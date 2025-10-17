@@ -7,7 +7,7 @@ const express = require('express');
 const router = express.Router();
 
 // get all pokemon
-router.route('/:page').get(getAllPokemon);
+router.route('/').get(getAllPokemon);
 
 // get single pokemon
 router.route('/pokemon/:id').get(getSinglePokemon);

@@ -15,11 +15,16 @@ export type GetPokemonPage = {
 // export type PokemonFullInfo = {};
 
 export const PokemonApi = {
-    async fetchPokemonPage(page: number) {
-        const { data } = await axios.get(`/api/v1/team/${page}`);
-        console.log(data);
-
-        //return pokemon;
+    async fetchAllPokemon() {
+        const { data } = await axios.get(`/api/v1/team`);
+        return data;
+    },
+    async fetchSinglePokemon(id: string) {
+        const { data } = await axios.get(`/api/v1/team/pokemon/${id}`);
+        return data;
+    },
+    async fetchURL(url: string) {
+        const { data } = await axios.get(url);
         return data;
     },
 };
