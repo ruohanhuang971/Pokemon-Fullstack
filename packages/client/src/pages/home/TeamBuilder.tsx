@@ -28,15 +28,13 @@ const TeamBuilder = () => {
         F: null,
     });
 
-    console.log(assignSlot);
-
     return (
-        <div className="flex flex-col justify-center item-center">
+        <div className="flex flex-col justify-center item-center m-4 md:m-6">
             <DndContext onDragEnd={handleDragEnd}>
                 {/* Row of droppable slots */}
-                <div className="flex justify-center space-x-6 mb-8">
+                <div className="flex flex-wrap space-x-1 justify-center gap-4 my-8">
                     {containers.map((id) => (
-                        <TeamSlots key={id} id={id}>
+                        <TeamSlots id={id}>
                             {assignSlot[id] ? ( // if dragged slot has stuff in it
                                 // render the card
                                 <SearchOptions id={assignSlot[id]!}>

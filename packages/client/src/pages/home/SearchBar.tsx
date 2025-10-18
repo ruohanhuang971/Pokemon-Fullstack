@@ -22,7 +22,7 @@ const SearchBar = () => {
                     type="search"
                     {...register('pokemonName', { required: true })}
                     placeholder="Search for pokemon..."
-                    className="bg-amber-50 border border-amber-400 text-black w-full max-w-md px-4 py-2 mx-3 rounded-md focus:border-amber-400"
+                    className="bg-amber-50 border border-amber-400 text-black w-full max-w-lg px-4 py-2 mx-auto rounded-md focus:border-amber-400"
                 />
                 {/* errors will return when field validation fails  */}
                 {errors.pokemonName && (
@@ -32,7 +32,7 @@ const SearchBar = () => {
                 )}
                 <input
                     type="submit"
-                    className="mt-5 bg-blue-500 hover:bg-blue-600 text-white px-10 py-2 rounded cursor-pointer"
+                    className="mt-5 bg-amber-500 hover:bg-amber-600 text-white px-10 py-2 rounded cursor-pointer"
                 />
             </form>
         </div>

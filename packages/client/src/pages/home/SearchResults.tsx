@@ -25,7 +25,7 @@ const SearchResults = ({ assignSlot }: SearchResultsProps) => {
     if (isLoading) return <p>...</p>;
 
     return (
-        <div className="mt-10 flex justify-center flex-wrap gap-4 mx-auto">
+        <div className="mt-10 md:mt-30 flex justify-center flex-wrap gap-4">
             {data.map((p: PokemonList, index: number) =>
                 !Object.values(assignSlot).includes(p.name) ? (
                     <SearchOptions key={index} id={p.name}>
