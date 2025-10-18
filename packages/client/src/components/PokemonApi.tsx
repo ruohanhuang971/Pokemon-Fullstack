@@ -17,7 +17,7 @@ export type GetPokemonPage = {
 export const PokemonApi = {
     async fetchAllPokemon() {
         const { data } = await axios.get(`/api/v1/team`);
-        return data;
+        return data.slice(0, 20);
     },
     async fetchSinglePokemon(id: string) {
         const { data } = await axios.get(`/api/v1/team/pokemon/${id}`);

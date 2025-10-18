@@ -1,22 +1,19 @@
 import { useQuery } from '@tanstack/react-query';
 import { PokemonApi } from '../../components/PokemonApi';
-import type { PokemonBasicInfo } from '../../components/PokemonApi';
 import SearchListItem from './SearchListItem';
-
-// type SearchResultsProp = {
-//     page: number;
-// };
-
-// type PokemonPageProp = {
-//     pokemon: PokemonBasicInfo[];
-// };
+import SearchOptions from './SearchOptions';
+import type { UniqueIdentifier } from '@dnd-kit/core';
 
 export type PokemonList = {
     name: string;
     url: string;
 };
 
-const SearchResults = () => {
+interface SearchResultsProps {
+    assignSlot: Record<UniqueIdentifier, UniqueIdentifier | null>;
+}
+
+const SearchResults = ({ assignSlot }: SearchResultsProps) => {
     // fetching pokemon here
     const { data, isLoading, error } = useQuery({
         queryKey: ['pokemon'],
@@ -29,11 +26,13 @@ const SearchResults = () => {
 
     return (
         <div className="mt-10 flex justify-center flex-wrap gap-4 mx-auto">
-            {data.map((p: PokemonList, index: number) => (
-                //<div key={index}>
-                <SearchListItem key={index} name={p.name} url={p.url} />
-                //</div>
-            ))}
+            {data.map((p: PokemonList, index: number) =>
+                !Object.values(assignSlot).includes(p.name) ? (
+                    <SearchOptions key={index} id={p.name}>
+                        <SearchListItem name={p.name} />
+                    </SearchOptions>
+                ) : null
+            )}
         </div>
     );
 };

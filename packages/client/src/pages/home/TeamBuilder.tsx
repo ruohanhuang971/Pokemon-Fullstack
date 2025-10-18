@@ -3,17 +3,17 @@ import type { DragEndEvent, UniqueIdentifier } from '@dnd-kit/core';
 import { useState } from 'react';
 import SearchOptions from './SearchOptions'; // draggable
 import TeamSlots from './TeamSlots'; // droppable
-import PokemonAvatar from '../../components//pokemonAvatar';
 import SearchBar from './SearchBar';
 import SearchResults from './SearchResults';
+import SearchListItem from './SearchListItem';
+import PokemonAvatar from '../../components/PokemonAvatar';
 
 /*
     TeamBuilder: drag pokemon cards from search options to teamSlot
 */
 
 const TeamBuilder = () => {
-    const containers = ['A', 'B', 'C'];
-    // const items = ['pikachu', 'bulbasaur', 'charmander', 'evee']; // TODO: TEST DRAGGABLE OPTIONS
+    const containers = ['A', 'B', 'C', 'D', 'E', 'F'];
 
     // track item in slot
     // Record<K, V>: K = key of object, V = value of key
@@ -23,7 +23,12 @@ const TeamBuilder = () => {
         A: null,
         B: null,
         C: null,
+        D: null,
+        E: null,
+        F: null,
     });
+
+    console.log(assignSlot);
 
     return (
         <div className="flex flex-col justify-center item-center">
@@ -35,10 +40,12 @@ const TeamBuilder = () => {
                             {assignSlot[id] ? ( // if dragged slot has stuff in it
                                 // render the card
                                 <SearchOptions id={assignSlot[id]!}>
-                                    {<PokemonAvatar name={assignSlot[id]} />}
+                                    <SearchListItem
+                                        name={String(assignSlot[id])}
+                                    />
                                 </SearchOptions>
                             ) : (
-                                <PokemonAvatar name="null" /> // set to blank slot if not
+                                <PokemonAvatar name="null" image={''} /> // set to blank slot if not
                             )}
                         </TeamSlots>
                     ))}
@@ -46,21 +53,8 @@ const TeamBuilder = () => {
 
                 <SearchBar />
 
-                <SearchResults />
-
-                {/* Draggable Items
-                <div className="flex justify-center">
-                    <div className="flex justify-center flex-wrap gap-4 max-w-md mx-auto">
-                        {items.map((itemId) =>
-                            // only render if not assigned to a slot
-                            !Object.values(assignSlot).includes(itemId) ? (
-                                <SearchOptions key={itemId} id={itemId}>
-                                    {<PokemonAvatar name={itemId} />}
-                                </SearchOptions>
-                            ) : null
-                        )}
-                    </div>
-                </div>*/}
+                {/* Draggable Items */}
+                <SearchResults assignSlot={assignSlot} />
             </DndContext>
         </div>
     );
@@ -73,7 +67,7 @@ const TeamBuilder = () => {
             setAssignSlot((prev) => {
                 const newAssignments = { ...prev };
 
-                // if the the dragged car is already in a slot, don't add it
+                // if the the dragged card is already in a slot, don't add it
                 // Find the slot that contains this draggable
                 const slotId = Object.keys(prev).find(
                     (key) => prev[key] === active.id

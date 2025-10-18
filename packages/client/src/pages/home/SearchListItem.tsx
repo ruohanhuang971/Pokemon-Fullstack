@@ -1,19 +1,16 @@
-import React from 'react';
-import type { PokemonList } from './SearchResults';
 import { useQuery } from '@tanstack/react-query';
 import { PokemonApi } from '../../components/PokemonApi';
-import PokemonAvatar from '../../components/pokemonAvatar';
+import PokemonAvatar from '../../components/PokemonAvatar';
 
 type ListItem = {
     name: string;
-    url: string;
 };
 
-const SearchListItem = ({ name, url }: ListItem) => {
+const SearchListItem = ({ name }: ListItem) => {
     // fetching single pokemon here
     const { data, isLoading, error } = useQuery({
         queryKey: [name],
-        queryFn: () => PokemonApi.fetchURL(url),
+        queryFn: () => PokemonApi.fetchSinglePokemon(name),
     });
 
     // console.log(data.name, data.sprites.front_default);
