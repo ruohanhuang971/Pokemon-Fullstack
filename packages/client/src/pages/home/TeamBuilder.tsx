@@ -1,6 +1,6 @@
 import { DndContext } from '@dnd-kit/core';
 import type { DragEndEvent, UniqueIdentifier } from '@dnd-kit/core';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import SearchOptions from './SearchOptions'; // draggable
 import TeamSlots from './TeamSlots'; // droppable
 import SearchBar from './SearchBar';
@@ -27,6 +27,29 @@ const TeamBuilder = () => {
         E: null,
         F: null,
     });
+    // user input in search bar
+    const [searchInput, setSearchInput] = useState<string>('');
+    // current page number for result
+    const [resultPage, setResultPage] = useState<number>(0);
+    // total page
+    const totalResultPage = useRef(0);
+
+    const handleGetTotalPage = (pageNumber: number) => {
+        totalResultPage.current = pageNumber;
+    };
+
+    const handlePreviousPage = () => {
+        console.log(resultPage);
+        if (resultPage > 0) {
+            setResultPage((page) => page - 1);
+        }
+    };
+
+    const handleNextPage = () => {
+        if (resultPage < totalResultPage.current) {
+            setResultPage((page) => page + 1);
+        }
+    };
 
     return (
         <div className="flex flex-col justify-center item-center m-4 md:m-6">
@@ -34,7 +57,7 @@ const TeamBuilder = () => {
                 {/* Row of droppable slots */}
                 <div className="flex flex-wrap space-x-1 justify-center gap-4 my-8">
                     {containers.map((id) => (
-                        <TeamSlots id={id}>
+                        <TeamSlots id={id} key={id}>
                             {assignSlot[id] ? ( // if dragged slot has stuff in it
                                 // render the card
                                 <SearchOptions id={assignSlot[id]!}>
@@ -43,16 +66,32 @@ const TeamBuilder = () => {
                                     />
                                 </SearchOptions>
                             ) : (
-                                <PokemonAvatar name="null" image={''} /> // set to blank slot if not
+                                <PokemonAvatar name="null" image={undefined} /> // set to blank slot if not
                             )}
                         </TeamSlots>
                     ))}
                 </div>
 
-                <SearchBar />
+                <SearchBar
+                    searchInput={searchInput}
+                    onSearch={setSearchInput}
+                />
+
+                <div className="flex text-center gap-2">
+                    <button onClick={handlePreviousPage}>Previous</button>
+                    <p>
+                        {resultPage + 1} / {totalResultPage.current}
+                    </p>
+                    <button onClick={handleNextPage}>Next</button>
+                </div>
 
                 {/* Draggable Items */}
-                <SearchResults assignSlot={assignSlot} />
+                <SearchResults
+                    searchInput={searchInput}
+                    assignSlot={assignSlot}
+                    page={resultPage}
+                    onGetTotalPage={handleGetTotalPage}
+                />
             </DndContext>
         </div>
     );

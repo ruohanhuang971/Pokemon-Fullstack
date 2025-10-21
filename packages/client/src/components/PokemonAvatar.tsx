@@ -1,12 +1,10 @@
 // display a head-shot of the pokemon + name
 // to put into slots for team building/display
 
-import type { UniqueIdentifier } from '@dnd-kit/core';
-
 type PokemonAvatarProps = {
     // id: UniqueIdentifier;
     name: string;
-    image: string;
+    image: string | undefined;
 };
 
 const PokemonAvatar = ({ name, image }: PokemonAvatarProps) => {

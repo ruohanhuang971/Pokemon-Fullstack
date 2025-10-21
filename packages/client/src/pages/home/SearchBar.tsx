@@ -1,40 +1,19 @@
-import { useForm, type SubmitHandler } from 'react-hook-form';
+interface SearchBarProps {
+    searchInput: string;
+    onSearch: (input: string) => void;
+}
 
-type Inputs = {
-    pokemonName: string;
-};
-
-const SearchBar = () => {
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm<Inputs>();
-
-    const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
-
+const SearchBar = ({ searchInput, onSearch }: SearchBarProps) => {
     return (
-        /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
+        /* Update searchInput every time some new is entered */
         <div className="mt-10">
-            <form onSubmit={handleSubmit(onSubmit)}>
-                {/* input validation */}
-                <input
-                    type="search"
-                    {...register('pokemonName', { required: true })}
-                    placeholder="Search for pokemon..."
-                    className="bg-amber-50 border border-amber-400 text-black w-full max-w-lg px-4 py-2 mx-auto rounded-md focus:border-amber-400"
-                />
-                {/* errors will return when field validation fails  */}
-                {errors.pokemonName && (
-                    <p className="text-red-700 italic">
-                        This field is required
-                    </p>
-                )}
-                <input
-                    type="submit"
-                    className="mt-5 bg-amber-500 hover:bg-amber-600 text-white px-10 py-2 rounded cursor-pointer"
-                />
-            </form>
+            <input
+                type="type"
+                placeholder="Search for pokemon..."
+                value={searchInput}
+                onChange={(e) => onSearch(e.target.value)}
+                className="bg-amber-50 border border-amber-400 text-black w-full max-w-lg px-4 py-2 mx-auto rounded-md focus:border-amber-400"
+            />
         </div>
     );
 };

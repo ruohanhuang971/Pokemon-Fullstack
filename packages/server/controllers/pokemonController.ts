@@ -17,6 +17,17 @@ export const getAllPokemon = async (req: Request, res: Response) => {
     return res.json(pokemonResource);
 };
 
+export const getPagePokemon = async (req: Request, res: Response) => {
+    const { offset } = req.params;
+
+    // fetch data from pokemon api
+    const URL = `https://pokeapi.co/api/v2/pokemon/?limit=24&offset=${offset}`;
+    const response = await axios.get(URL);
+    const pokemonResource = response.data.results;
+
+    return res.json(pokemonResource);
+};
+
 export const getSinglePokemon = async (req: Request, res: Response) => {
     const { id } = req.params;
 
