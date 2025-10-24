@@ -3,6 +3,7 @@ import { PokemonApi } from '../../components/PokemonApi';
 import SearchListItem from './SearchListItem';
 import SearchOptions from './SearchOptions';
 import type { UniqueIdentifier } from '@dnd-kit/core';
+import { useEffect } from 'react';
 
 export type PokemonList = {
     name: string;
@@ -28,26 +29,33 @@ const SearchResults = ({
         queryFn: () => PokemonApi.fetchAllPokemon(),
     });
 
-    // const PageData = await PokemonApi.fetchPokemonPage(page);
-    if (error) return <p>Something went wrong</p>;
-    if (isLoading) return <p>...</p>;
-
     // filter search result
-    const curDisplay = data.filter(
+    const curDisplay = data?.filter(
         (p: PokemonList) =>
             !Object.values(assignSlot).includes(p.name) &&
             p.name.startsWith(searchInput)
     );
 
+    const limit = 12;
+    const totalPage = Math.round(curDisplay?.length / limit);
+
+    const curPage = curDisplay?.slice(page * limit, (page + 1) * limit);
+
+    useEffect(() => {
+        onGetTotalPage(totalPage);
+    }, [totalPage, onGetTotalPage]);
+
+    if (error) return <p>Something went wrong</p>;
+    if (isLoading) return <p>...</p>;
+
     // if there is no search result
-    if (curDisplay.length === 0) return <h1>NOTHING HERE</h1>;
-    const limit = 18;
-    const totalPage = Math.round(curDisplay.length / limit);
-    onGetTotalPage(totalPage);
-    const curPage = curDisplay.slice(page * limit, (page + 1) * limit);
+    if (curDisplay?.length === 0) return <h1>NOTHING HERE</h1>;
 
     return (
-        <div className="mt-10 md:mt-20 flex justify-center flex-wrap gap-4">
+        <div
+            className="mt-5 md:mt-10 flex justify-center flex-wrap gap-4 max-w-screen-lg mx-auto"
+            style={{ touchAction: 'none' }}
+        >
             {curPage.map((p: PokemonList, index: number) => (
                 <SearchOptions key={index} id={p.name}>
                     <SearchListItem name={p.name} />

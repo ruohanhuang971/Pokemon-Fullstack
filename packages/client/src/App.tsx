@@ -4,7 +4,7 @@ import './App.css';
 function App() {
     return (
         <>
-            <main className="min-h-screen w-full bg-red font-primary">
+            <main className="min-w-screen min-h-screen bg-red font-primary">
                 <Outlet /> {/* Outlet render all children of App*/}
             </main>
         </>

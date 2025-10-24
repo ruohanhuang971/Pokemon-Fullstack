@@ -1,6 +1,12 @@
-import { DndContext } from '@dnd-kit/core';
+import {
+    DndContext,
+    TouchSensor,
+    MouseSensor,
+    useSensor,
+    useSensors,
+} from '@dnd-kit/core';
 import type { DragEndEvent, UniqueIdentifier } from '@dnd-kit/core';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import SearchOptions from './SearchOptions'; // draggable
 import TeamSlots from './TeamSlots'; // droppable
 import SearchBar from './SearchBar';
@@ -27,33 +33,48 @@ const TeamBuilder = () => {
         E: null,
         F: null,
     });
+
+    const sensors = useSensors(
+        useSensor(MouseSensor),
+        useSensor(TouchSensor, {
+            activationConstraint: {
+                delay: 200,
+                tolerance: 5,
+            },
+        })
+    );
+
     // user input in search bar
     const [searchInput, setSearchInput] = useState<string>('');
     // current page number for result
     const [resultPage, setResultPage] = useState<number>(0);
     // total page
-    const totalResultPage = useRef(0);
+    const [totalResultPage, setTotalResultPage] = useState<number>(0);
 
     const handleGetTotalPage = (pageNumber: number) => {
-        totalResultPage.current = pageNumber;
+        setTotalResultPage(pageNumber);
     };
 
     const handlePreviousPage = () => {
-        console.log(resultPage);
         if (resultPage > 0) {
             setResultPage((page) => page - 1);
         }
     };
 
     const handleNextPage = () => {
-        if (resultPage < totalResultPage.current) {
+        if (resultPage < totalResultPage) {
             setResultPage((page) => page + 1);
         }
     };
 
+    const handleOnChangeInput = (input: string) => {
+        setResultPage(0);
+        setSearchInput(input);
+    };
+
     return (
         <div className="flex flex-col justify-center item-center m-4 md:m-6">
-            <DndContext onDragEnd={handleDragEnd}>
+            <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
                 {/* Row of droppable slots */}
                 <div className="flex flex-wrap space-x-1 justify-center gap-4 my-8">
                     {containers.map((id) => (
@@ -74,15 +95,25 @@ const TeamBuilder = () => {
 
                 <SearchBar
                     searchInput={searchInput}
-                    onSearch={setSearchInput}
+                    onSearch={handleOnChangeInput}
                 />
 
-                <div className="flex text-center gap-2">
-                    <button onClick={handlePreviousPage}>Previous</button>
+                <div className="flex justify-center items-center text-center gap-2 mt-2">
+                    <button
+                        onClick={handlePreviousPage}
+                        className="px-2 py-1 bg-amber-500 text-white rounded hover:bg-amber-600"
+                    >
+                        Previous
+                    </button>
                     <p>
-                        {resultPage + 1} / {totalResultPage.current}
+                        {resultPage + 1} / {totalResultPage}
                     </p>
-                    <button onClick={handleNextPage}>Next</button>
+                    <button
+                        onClick={handleNextPage}
+                        className="px-2 py-1 bg-amber-500 text-white rounded hover:bg-amber-600"
+                    >
+                        Next
+                    </button>
                 </div>
 
                 {/* Draggable Items */}
