@@ -6,13 +6,14 @@ import {
     useSensors,
 } from '@dnd-kit/core';
 import type { DragEndEvent, UniqueIdentifier } from '@dnd-kit/core';
-import { useState } from 'react';
+import { act, useState } from 'react';
 import SearchOptions from './SearchOptions'; // draggable
 import TeamSlots from './TeamSlots'; // droppable
 import SearchBar from './SearchBar';
 import SearchResults from './SearchResults';
 import SearchListItem from './SearchListItem';
 import PokemonAvatar from '../../components/PokemonAvatar';
+import PokemonAnalysis from './PokemonAnalysis';
 
 /*
     TeamBuilder: drag pokemon cards from search options to teamSlot
@@ -34,6 +35,13 @@ const TeamBuilder = () => {
         F: null,
     });
 
+    // user input in search bar
+    const [searchInput, setSearchInput] = useState<string>('');
+    // current page number for result
+    const [resultPage, setResultPage] = useState<number>(0);
+    // total page
+    const [totalResultPage, setTotalResultPage] = useState<number>(0);
+
     const sensors = useSensors(
         useSensor(MouseSensor),
         useSensor(TouchSensor, {
@@ -43,13 +51,6 @@ const TeamBuilder = () => {
             },
         })
     );
-
-    // user input in search bar
-    const [searchInput, setSearchInput] = useState<string>('');
-    // current page number for result
-    const [resultPage, setResultPage] = useState<number>(0);
-    // total page
-    const [totalResultPage, setTotalResultPage] = useState<number>(0);
 
     const handleGetTotalPage = (pageNumber: number) => {
         setTotalResultPage(pageNumber);
@@ -72,6 +73,10 @@ const TeamBuilder = () => {
         setSearchInput(input);
     };
 
+    const selectedPokemons = Object.values(assignSlot).filter(
+        (value) => value !== null
+    );
+
     return (
         <div className="flex flex-col justify-center item-center m-4 md:m-6">
             <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
@@ -79,19 +84,34 @@ const TeamBuilder = () => {
                 <div className="flex flex-wrap space-x-1 justify-center gap-4 my-8">
                     {containers.map((id) => (
                         <TeamSlots id={id} key={id}>
-                            {assignSlot[id] ? ( // if dragged slot has stuff in it
+                            {assignSlot[id] && ( // if dragged slot has stuff in it
                                 // render the card
-                                <SearchOptions id={assignSlot[id]!}>
-                                    <SearchListItem
-                                        name={String(assignSlot[id])}
-                                    />
-                                </SearchOptions>
-                            ) : (
-                                <PokemonAvatar name="null" image={undefined} /> // set to blank slot if not
+                                <div>
+                                    <SearchOptions id={assignSlot[id]!}>
+                                        <SearchListItem
+                                            name={String(assignSlot[id])}
+                                        />
+                                    </SearchOptions>
+                                    <button className="text-[10px] md:text-sm">
+                                        SHOW DETAILS
+                                    </button>
+                                </div>
+                            )}
+                            {!assignSlot[id] && (
+                                <PokemonAvatar
+                                    name="null"
+                                    image={undefined}
+                                    types={undefined}
+                                /> // set to blank slot if not
                             )}
                         </TeamSlots>
                     ))}
                 </div>
+
+                <button className="bg-amber-400 w-50 mx-auto rounded-full">
+                    Analyze Team
+                </button>
+                <PokemonAnalysis names={selectedPokemons} />
 
                 <SearchBar
                     searchInput={searchInput}

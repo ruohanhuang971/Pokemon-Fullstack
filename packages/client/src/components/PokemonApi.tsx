@@ -32,4 +32,10 @@ export const PokemonApi = {
         const { data } = await axios.get(url);
         return data;
     },
+    async fetchTypeInfo(type: string) {
+        const { data } = await axios.get(
+            `https://pokeapi.co/api/v2/type/${type}`
+        );
+        return data;
+    },
 };

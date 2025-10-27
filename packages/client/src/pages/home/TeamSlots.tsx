@@ -8,18 +8,11 @@ type DragDropProps = {
 };
 
 const TeamSlots = ({ children, id }: DragDropProps) => {
-    const { isOver, setNodeRef } = useDroppable({
+    const { setNodeRef } = useDroppable({
         id: id,
     });
-    const style = {
-        color: isOver ? 'green' : undefined,
-    };
 
-    return (
-        <div ref={setNodeRef} style={style}>
-            {children}
-        </div>
-    );
+    return <div ref={setNodeRef}>{children}</div>;
 };
 
 export default TeamSlots;

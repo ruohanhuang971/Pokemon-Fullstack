@@ -17,6 +17,10 @@ interface SearchResultsProps {
     onGetTotalPage: (i: number) => void;
 }
 
+/*
+    TODO: FILTER POKEMON BY TYPE WITH: https://pokeapi.co/api/v2/type/7/
+*/
+
 const SearchResults = ({
     searchInput,
     assignSlot,
@@ -49,7 +53,10 @@ const SearchResults = ({
     if (isLoading) return <p>...</p>;
 
     // if there is no search result
-    if (curDisplay?.length === 0) return <h1>NOTHING HERE</h1>;
+    if (curDisplay?.length === 0)
+        return (
+            <h1 className="mt-5 md:mt-10">Can't find pokemon with that name</h1>
+        );
 
     return (
         <div
