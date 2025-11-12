@@ -6,7 +6,7 @@ import {
     useSensors,
 } from '@dnd-kit/core';
 import type { DragEndEvent, UniqueIdentifier } from '@dnd-kit/core';
-import { act, useState } from 'react';
+import { useState } from 'react';
 import SearchOptions from './SearchOptions'; // draggable
 import TeamSlots from './TeamSlots'; // droppable
 import SearchBar from './SearchBar';
@@ -41,6 +41,7 @@ const TeamBuilder = () => {
     const [resultPage, setResultPage] = useState<number>(0);
     // total page
     const [totalResultPage, setTotalResultPage] = useState<number>(0);
+    const [showAnalyze, setShowAnalyze] = useState<boolean>(false);
 
     const sensors = useSensors(
         useSensor(MouseSensor),
@@ -73,6 +74,10 @@ const TeamBuilder = () => {
         setSearchInput(input);
     };
 
+    const handleClickAnalyze = () => {
+        setShowAnalyze((show) => !show);
+    };
+
     const selectedPokemons = Object.values(assignSlot).filter(
         (value) => value !== null
     );
@@ -92,7 +97,7 @@ const TeamBuilder = () => {
                                             name={String(assignSlot[id])}
                                         />
                                     </SearchOptions>
-                                    <button className="text-[10px] md:text-sm">
+                                    <button className="text-[10px] md:text-sm bg-amber-500 hover:bg-amber-600 hover:cursor-pointer rounded-full px-2">
                                         SHOW DETAILS
                                     </button>
                                 </div>
@@ -108,10 +113,13 @@ const TeamBuilder = () => {
                     ))}
                 </div>
 
-                <button className="bg-amber-400 w-50 mx-auto rounded-full">
-                    Analyze Team
+                <button
+                    className="bg-amber-500 hover:bg-amber-600 hover:cursor-pointer w-50 mx-auto rounded-full"
+                    onClick={handleClickAnalyze}
+                >
+                    {showAnalyze ? 'Hide Analysis' : 'Analyze Team'}
                 </button>
-                <PokemonAnalysis names={selectedPokemons} />
+                {showAnalyze && <PokemonAnalysis names={selectedPokemons} />}
 
                 <SearchBar
                     searchInput={searchInput}
@@ -121,16 +129,18 @@ const TeamBuilder = () => {
                 <div className="flex justify-center items-center text-center gap-2 mt-2">
                     <button
                         onClick={handlePreviousPage}
-                        className="px-2 py-1 bg-amber-500 text-white rounded hover:bg-amber-600"
+                        className="px-2 py-1 bg-amber-500 text-white rounded hover:bg-amber-600 hover:cursor-pointer"
                     >
                         Previous
                     </button>
                     <p>
-                        {resultPage + 1} / {totalResultPage}
+                        {totalResultPage
+                            ? `${resultPage + 1} / ${totalResultPage}`
+                            : '- / -'}
                     </p>
                     <button
                         onClick={handleNextPage}
-                        className="px-2 py-1 bg-amber-500 text-white rounded hover:bg-amber-600"
+                        className="px-4 py-1 bg-amber-500 text-white rounded hover:bg-amber-600 hover:cursor-pointer"
                     >
                         Next
                     </button>

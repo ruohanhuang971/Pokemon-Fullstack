@@ -1,3 +1,4 @@
+import type { UniqueIdentifier } from '@dnd-kit/core';
 import axios from 'axios';
 
 export type PokemonBasicInfo = {
@@ -24,7 +25,7 @@ export const PokemonApi = {
         const { data } = await axios.get(`/api/v1/team/${offset}`);
         return data;
     },
-    async fetchSinglePokemon(id: string) {
+    async fetchSinglePokemon(id: UniqueIdentifier | string) {
         const { data } = await axios.get(`/api/v1/team/pokemon/${id}`);
         return data;
     },
